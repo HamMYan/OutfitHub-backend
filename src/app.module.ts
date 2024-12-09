@@ -9,6 +9,10 @@ import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import { CategoryModule } from './subcategory/category/category.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { CustomerModule } from './customer/customer.module';
+import { WishModule } from './wish/wish.module';
 
 @Module({
   imports: [
@@ -36,7 +40,11 @@ import { ProductModule } from './product/product.module';
       }
     }),
     AuthModule,
-    ProductModule
+    ProductModule,
+    CategoryModule,
+    FeedbackModule,
+    CustomerModule,
+    WishModule
   ],
   controllers: [AppController],
   providers: [AppService],

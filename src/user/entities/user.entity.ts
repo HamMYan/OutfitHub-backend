@@ -1,20 +1,24 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./role-enum";
 
 @Entity()
 export class User {
+    @Index()
     @PrimaryGeneratedColumn()
     id: number
 
+    @Index()
     @Column()
     name: string
 
+    @Index()
     @Column()
     surname: string
 
     @Column()
     age: number
 
+    @Index()
     @Column()
     email: string
 

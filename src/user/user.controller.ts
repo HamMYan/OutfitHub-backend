@@ -22,17 +22,19 @@ export class UserController {
       const response = await this.userService.create(createUserDto);
       return res.status(HttpStatus.OK).json({ response });
     } catch (err) {
-      return res.status(HttpStatus.OK).json({ message: err.message });
+      return res.status(HttpStatus.OK).json({ error: err.message });
     }
   }
 
   @Get()
-  async findAll() {
+  async findAll(
+    @Res() res: Response
+  ) {
     try {
       return await this.userService.findAll();
     } catch (err) {
       console.error('Error in findAll:', err);
-      throw new HttpException('Failed to fetch users', HttpStatus.INTERNAL_SERVER_ERROR);
+      return res.status(HttpStatus.OK).json({ error: err.message })
     }
   }
 

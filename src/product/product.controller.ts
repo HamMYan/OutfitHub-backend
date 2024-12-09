@@ -1,15 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Res, Req, HttpStatus } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { HasRoles } from 'src/auth/has-roles.decorator';
+import { Role } from 'src/user/entities/role-enum';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RoleGuard } from 'src/auth/roles.guard';
+import { Response } from 'express';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
+  @ApiBearerAuth('JWT-auth')
+  @HasRoles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(
+    @Body() createProductDto: CreateProductDto,
+    @Req() req,
+    @Res() res: Response
+  ) {
+    try {
+      const response = await this.productService.create(createProductDto, req.user);
+      return res.status(HttpStatus.CREATED).json(response)
+    } catch (err) {
+      return res.status(HttpStatus.OK).json({ error: err.message })
+    }
   }
 
   @Get()
